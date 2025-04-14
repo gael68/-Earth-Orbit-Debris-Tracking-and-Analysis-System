@@ -1,5 +1,5 @@
-package main.java;
+package utep.oop.team22code;
 
-public class Sattelite {
+public class SatteliteTest {
 
 }

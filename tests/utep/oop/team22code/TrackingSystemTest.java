@@ -1,5 +1,5 @@
 package utep.oop.team22code;
 
-public class TrackingSystem {
+public class TrackingSystemTest {
 
 }

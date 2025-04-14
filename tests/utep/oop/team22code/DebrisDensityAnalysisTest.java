@@ -1,5 +1,5 @@
 package utep.oop.team22code;
 
-public class DebrisDensityAnalysis {
+public class DebrisDensityAnalysisTest {
 
 }
