@@ -6,20 +6,43 @@ import java.util.HashMap;
 
 public class RunSimulationAnalysis {
 
+    private static Map<String, String[]> actions = new HashMap<>();
+    private static Map<String, String> userTypes = new HashMap<>();
+
     /**
      * @param args
      */
     public static void main(String[] args) {
+        setup();
         System.out.println("Welcome to the Earth Orbit Debris Tracking Analysis Tool");
-
         String userType = determineUserType();
-
         if (userType.equals("Exit")) {
             System.out.println("Exiting the system. Goodbye!");
         } else {
             System.out.println("Initializing system for " + userType + " access...");
         }
+    }
 
+    private static void setup() {
+        buildActionsDictionary();
+        buildUserTypeDictionary();
+    }
+
+    private static void buildUserTypeDictionary() {
+        // Create a dictionary (Map) of user types
+        userTypes.put("1", "Scientist");
+        userTypes.put("2", "Space Agency Representative");
+        userTypes.put("3", "Policymaker");
+        userTypes.put("4", "Administrator");
+        userTypes.put("5", "Exit");
+    }
+
+    private static void buildActionsDictionary() {
+        // Create a dictionary (Map) of actions for each user type
+        actions.put("Scientist", new String[] { "Track Object in Space", "Access Orbit Status", "Exit" });
+        actions.put("Space Agency Representative", new String[] { "Exit" });
+        actions.put("Policymaker", new String[] { "Exit" });
+        actions.put("Administrator", new String[] { "Exit" });
     }
 
     /**
@@ -33,16 +56,7 @@ public class RunSimulationAnalysis {
         String userType = "";
         boolean validSelection = false;
 
-        // Create a dictionary (Map) of user types
-        Map<String, String> userTypes = new HashMap<>();
-        userTypes.put("1", "Scientist");
-        userTypes.put("2", "Space Agency Representative");
-        userTypes.put("3", "Policymaker");
-        userTypes.put("4", "Administrator");
-        userTypes.put("5", "Exit");
-
         while (!validSelection) {
-            // Display user type options
             System.out.println("\nPlease select your user type:");
             System.out.println("1. Scientist");
             System.out.println("2. Space Agency Representative");
@@ -51,13 +65,13 @@ public class RunSimulationAnalysis {
             System.out.println("5. Exit");
             System.out.print("\nEnter your selection (1-5): ");
 
-            // Get user input
             String input = scanner.nextLine().trim();
 
             // Process selection using the dictionary
             if (userTypes.containsKey(input)) {
                 userType = userTypes.get(input);
                 validSelection = true;
+                scanner.close();
             } else {
                 System.out.println("Invalid selection. Please enter a number between 1 and 5.");
             }
@@ -66,8 +80,6 @@ public class RunSimulationAnalysis {
         if (!userType.equals("Exit")) {
             System.out.println("You have selected: " + userType);
         }
-
-        scanner.close();
         return userType;
     }
 }
