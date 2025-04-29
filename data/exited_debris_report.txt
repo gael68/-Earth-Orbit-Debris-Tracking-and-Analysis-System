@@ -1,0 +1,16 @@
+Exited Debris Report
+Total in orbit: 86
+Total exited: 12
+
+RecordID: 23097, Name: USA 103, Country: US, OrbitType: Unknown Orbit Category, LaunchYear: 1994, LaunchSite: AFETR, Longitude: 0.0, AvgLongitude: 0.0, Geohash: "28.4917337, DaysOld: 0
+RecordID: 29210, Name: SCOUT G-1 DEB, Country: US, OrbitType: LEO, LaunchYear: 1987, LaunchSite: AFWTR, Longitude: 0.0, AvgLongitude: 0.0, Geohash: "34.742221, DaysOld: 0
+RecordID: 31518, Name: FENGYUN 1C DEB, Country: PRC, OrbitType: LEO, LaunchYear: 1999, LaunchSite: TSC, Longitude: 0.0, AvgLongitude: 0.0, Geohash: "38.849086, DaysOld: 0
+RecordID: 32558, Name: DELTA 4H DEB, Country: US, OrbitType: Unknown Orbit Category, LaunchYear: 2007, LaunchSite: AFETR, Longitude: 0.0, AvgLongitude: 0.0, Geohash: "28.4917337, DaysOld: 0
+RecordID: 46525, Name: FREGAT DEB, Country: CIS, OrbitType: LEO, LaunchYear: 2011, LaunchSite: TTMTR, Longitude: 0.0, AvgLongitude: 0.0, Geohash: "45.965, DaysOld: 0
+RecordID: 50802, Name: COSMOS 2499 DEB, Country: CIS, OrbitType: LEO, LaunchYear: 2014, LaunchSite: PKMTR, Longitude: 0.0, AvgLongitude: 84.37778856, Geohash: "62.925556, DaysOld: 0
+RecordID: 61354, Name: CZ-6A DEB, Country: PRC, OrbitType: LEO, LaunchYear: 2024, LaunchSite: TSC, Longitude: 0.0, AvgLongitude: 32.2282236, Geohash: "38.849086, DaysOld: 0
+RecordID: 61819, Name: CZ-6A DEB, Country: PRC, OrbitType: LEO, LaunchYear: 2024, LaunchSite: TSC, Longitude: 0.0, AvgLongitude: 22.59503966, Geohash: "38.849086, DaysOld: 0
+RecordID: 41009, Name: FENGYUN 1C DEB, Country: PRC, OrbitType: LEO, LaunchYear: 1999, LaunchSite: TSC, Longitude: 0.0, AvgLongitude: 0.0, Geohash: "38.849086, DaysOld: 0
+RecordID: 40862, Name: CZ-3C DEB, Country: PRC, OrbitType: HEO, LaunchYear: 2012, LaunchSite: XSC, Longitude: 0.0, AvgLongitude: 0.0, Geohash: "28.246017, DaysOld: 0
+RecordID: 48539, Name: SL-12 DEB, Country: CIS, OrbitType: HEO, LaunchYear: 2008, LaunchSite: TTMTR, Longitude: 0.0, AvgLongitude: 0.0, Geohash: "45.965, DaysOld: 0
+RecordID: 52967, Name: ATLAS 5 CENTAUR DEB, Country: US, OrbitType: HEO, LaunchYear: 2018, LaunchSite: AFETR, Longitude: 0.0, AvgLongitude: 0.0, Geohash: "28.4917337, DaysOld: 0
