@@ -12,10 +12,9 @@ public class RunSimulation {
      * 
      * @param args command-line arguments (not used)
      */
-
     public static void main(String[] args) {
-        MissionControl control = new MissionControl();
-        control.loadData("data/rso_metrics.csv");
+        MissionControl control = new MissionControl("data/rso_metrics.csv");
+        control.loadData();
         control.runSimulation();
     }
 }

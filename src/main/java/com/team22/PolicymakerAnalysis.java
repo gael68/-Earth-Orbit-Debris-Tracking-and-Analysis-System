@@ -4,7 +4,6 @@ package com.team22;
  * Provides analysis tools for policymakers to review impact reports and assess risk.
  */
 import java.io.*;
-import java.util.*;
 
 public class PolicymakerAnalysis {
 

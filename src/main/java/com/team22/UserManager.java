@@ -1,21 +1,29 @@
 package com.team22;
 
-/**
- * Handles creation, listing, and deletion of user accounts.
- * Users are persisted in data/users.csv.
- */
-
 import java.io.*;
 import java.util.*;
 
+/**
+ * Handles creation, listing, and deletion of user accounts.
+ * Users are persisted in a configurable CSV file (default: data/users.csv).
+ */
 public class UserManager {
 
-    private static final String USER_FILE = "data/users.csv";
+    private final String userFile;
+
+    // Default constructor uses the standard file
+    public UserManager() {
+        this("data/users.csv");
+    }
+
+    // Constructor for injecting custom test path
+    public UserManager(String userFile) {
+        this.userFile = userFile;
+    }
 
     /**
      * Prompts to create a new user and saves it.
      */
-
     public void createUser() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter username: ");
@@ -24,7 +32,7 @@ public class UserManager {
         System.out.print("Enter role (Scientist, Admin, Agency, Policymaker): ");
         String role = scanner.nextLine().trim();
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(USER_FILE, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(userFile, true))) {
             writer.write(username + "," + role + "\n");
             System.out.println("User created successfully.");
             Logger.log("Admin created user: " + username + " with role: " + role);
@@ -36,9 +44,8 @@ public class UserManager {
     /**
      * Displays all users from the file.
      */
-
     public void listUsers() {
-        File file = new File(USER_FILE);
+        File file = new File(userFile);
         if (!file.exists()) {
             System.out.println("No users to display.");
             return;
@@ -59,14 +66,13 @@ public class UserManager {
     /**
      * Deletes a user from the user file by name.
      */
-
     public void deleteUser() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter username to delete: ");
         String target = scanner.nextLine().trim();
 
-        File inputFile = new File(USER_FILE);
-        File tempFile = new File("data/users_temp.csv");
+        File inputFile = new File(userFile);
+        File tempFile = new File(userFile.replace(".csv", "_temp.csv"));
 
         boolean found = false;
 

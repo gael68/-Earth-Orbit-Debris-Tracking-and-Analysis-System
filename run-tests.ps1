@@ -18,6 +18,6 @@ if ($LASTEXITCODE -eq 0) {
 
 # Run
 Write-Host "Running tests..." -ForegroundColor Yellow
-java -jar lib\junit-platform-console-standalone-1.10.2.jar --class-path out --select-class com.team22.ImpactAnalysisTest
+java -jar lib\junit-platform-console-standalone-1.10.2.jar --class-path out --scan-class-path --include-package com.team22
 
 Write-Host "`nAll tests done! 🎯" -ForegroundColor Cyan
