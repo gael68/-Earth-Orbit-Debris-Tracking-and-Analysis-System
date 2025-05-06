@@ -21,6 +21,42 @@ public class UserManager {
         this.userFile = userFile;
     }
 
+    public boolean verifyLogin(String role, Scanner scanner) {
+        File file = new File("data/users.csv");
+        if (!file.exists()) {
+            System.out.println("User file missing.");
+            return false;
+        }
+
+        System.out.print("Username: ");
+        String inputUser = scanner.nextLine().trim();
+
+        System.out.print("Password: ");
+        String inputPass = scanner.nextLine().trim();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 3) {
+                    String username = parts[0];
+                    String userRole = parts[1];
+                    String password = parts[2];
+                    if (username.equals(inputUser) && userRole.equalsIgnoreCase(role) && password.equals(inputPass)) {
+                        Logger.log("Login successful for " + username + " (" + role + ")");
+                        return true;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Login error: " + e.getMessage());
+        }
+
+        System.out.println("Invalid credentials.");
+        Logger.log("Failed login attempt for role: " + role);
+        return false;
+    }
+
     /**
      * Prompts to create a new user and saves it.
      */
@@ -102,4 +138,56 @@ public class UserManager {
             System.out.println("Error deleting user: " + e.getMessage());
         }
     }
+
+    public void manageUser() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter username to update: ");
+        String target = scanner.nextLine().trim();
+
+        File inputFile = new File(userFile);
+        File tempFile = new File(userFile.replace(".csv", "_temp.csv"));
+
+        boolean found = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 3 && parts[0].equals(target)) {
+                    found = true;
+                    System.out.println("Found user: " + parts[0] + " (" + parts[1] + ")");
+
+                    System.out.print("Enter new username (press Enter to keep current): ");
+                    String newUsername = scanner.nextLine().trim();
+                    if (newUsername.isEmpty())
+                        newUsername = parts[0];
+
+                    System.out.print("Enter new password (press Enter to keep current): ");
+                    String newPassword = scanner.nextLine().trim();
+                    if (newPassword.isEmpty())
+                        newPassword = parts[2];
+
+                    writer.write(newUsername + "," + parts[1] + "," + newPassword + "\n");
+                    Logger.log("Admin updated user: " + parts[0]);
+                } else {
+                    writer.write(line + "\n");
+                }
+            }
+
+            if (found) {
+                inputFile.delete();
+                tempFile.renameTo(inputFile);
+                System.out.println("User updated successfully.");
+            } else {
+                tempFile.delete();
+                System.out.println("User not found.");
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error updating user: " + e.getMessage());
+        }
+    }
+
 }

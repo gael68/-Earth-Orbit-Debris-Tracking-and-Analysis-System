@@ -6,20 +6,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.*;
 
-public class ImpactAnalysisTest {
+class ImpactAnalysisTest {
 
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private PrintStream originalOut;
 
     // Concrete subclass for testing purposes
     static class TestSpaceObject extends SpaceObject {
-        public TestSpaceObject(String recordId, String satelliteName, String country,
-                String approximateOrbitType,
+        public TestSpaceObject(String recordId, String satelliteName, String country, String approximateOrbitType,
                 String objectType, int launchYear, String launchSite,
                 double longitude, double avgLongitude, String geohash,
                 int daysOld, int conjunctionCount) {
-            super(recordId, satelliteName, country, approximateOrbitType, objectType,
-                    launchYear,
+            super(recordId, satelliteName, country, approximateOrbitType, objectType, launchYear,
                     launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
         }
 
@@ -55,9 +53,9 @@ public class ImpactAnalysisTest {
         String output = outputStreamCaptor.toString();
 
         // Verify that the 10 oldest objects are printed
-        assertTrue(output.contains("Satellite14"), "Expected to find Satellite14(oldest) in output.");
-        assertTrue(output.contains("Satellite5"), "Expected to find Satellite5 (tentholdest) in output.");
-        assertFalse(output.contains("Satellite4"), "Did not expect to find Satellite4(11th oldest) in output.");
+        assertTrue(output.contains("Satellite14"), "Expected to find Satellite14 (oldest) in output.");
+        assertTrue(output.contains("Satellite5"), "Expected to find Satellite5 (tenth oldest) in output.");
+        assertFalse(output.contains("Satellite4"), "Did not expect to find Satellite4 (11th oldest) in output.");
     }
 
     @Test

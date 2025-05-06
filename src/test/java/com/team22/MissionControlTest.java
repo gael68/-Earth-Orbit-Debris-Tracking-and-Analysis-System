@@ -7,9 +7,10 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MissionControlTest {
+public class MissionControlTest {
 
     private static final Path TEMP_DATA = Paths.get("data/test_space_objects.csv");
+    private static final Path TEMP_USERS = Paths.get("data/users.csv");
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private PrintStream originalOut;
 
@@ -21,6 +22,12 @@ class MissionControlTest {
                 "D001,,DebrisOne,USA,LEO,Debris,2000,Cape,100.0,98.0,G1,_,_,_,_,_,_,_,5000,3",
                 "S001,,SatOne,JPN,MEO,Satellite,2010,Tanegashima,80.0,80.0,G2,_,_,_,_,_,_,_,2000,1"));
 
+        Files.write(TEMP_USERS, List.of(
+                "alice,Scientist,pass123",
+                "bob,Admin,adminpass",
+                "carol,Agency,agencypass",
+                "dave,Policymaker,policy123"));
+
         originalOut = System.out;
         System.setOut(new PrintStream(outContent));
     }
@@ -28,6 +35,7 @@ class MissionControlTest {
     @AfterEach
     void teardown() throws IOException {
         Files.deleteIfExists(TEMP_DATA);
+        Files.deleteIfExists(TEMP_USERS);
         System.setOut(originalOut);
     }
 
@@ -52,15 +60,19 @@ class MissionControlTest {
 
     @Test
     void testAuthorizeUser_noCrash() {
-        MissionControl mcScientist = new MissionControl(TEMP_DATA.toString(), new Scanner("3\n"));
-        MissionControl mcAdmin = new MissionControl(TEMP_DATA.toString(), new Scanner("4\nplaceholder\nplaceholder\n"));
-        MissionControl mcAgency = new MissionControl(TEMP_DATA.toString(), new Scanner("3\n"));
-        MissionControl mcPolicy = new MissionControl(TEMP_DATA.toString(), new Scanner("3\n"));
+        // Enough inputs to log in and then back out of each role's menu
+        String scientistInput = String.join("\n", "alice", "pass123", "3");
+        String adminInput = String.join("\n", "bob", "adminpass", "4");
+        String agencyInput = String.join("\n", "carol", "agencypass", "3");
+        String policymakerInput = String.join("\n", "dave", "policy123", "3");
 
-        assertDoesNotThrow(() -> mcScientist.authorizeUser("Scientist"));
-        assertDoesNotThrow(() -> mcAdmin.authorizeUser("Admin"));
-        assertDoesNotThrow(() -> mcAgency.authorizeUser("Agency"));
-        assertDoesNotThrow(() -> mcPolicy.authorizeUser("Policymaker"));
+        assertDoesNotThrow(
+                () -> new MissionControl(TEMP_DATA.toString(), new Scanner(scientistInput)).authorizeUser("Scientist"));
+        assertDoesNotThrow(
+                () -> new MissionControl(TEMP_DATA.toString(), new Scanner(adminInput)).authorizeUser("Admin"));
+        assertDoesNotThrow(
+                () -> new MissionControl(TEMP_DATA.toString(), new Scanner(agencyInput)).authorizeUser("Agency"));
+        assertDoesNotThrow(() -> new MissionControl(TEMP_DATA.toString(), new Scanner(policymakerInput))
+                .authorizeUser("Policymaker"));
     }
-
 }
