@@ -18,9 +18,9 @@ public class MissionControlTest {
     void setup() throws IOException {
         Files.createDirectories(Paths.get("data"));
         Files.write(TEMP_DATA, List.of(
-                "RecordID,Ignore,SatelliteName,Country,OrbitType,ObjectType,LaunchYear,LaunchSite,Longitude,AvgLongitude,Geohash,Skip1,Skip2,Skip3,Skip4,Skip5,Skip6,Skip7,DaysOld,ConjunctionCount",
-                "D001,,DebrisOne,USA,LEO,Debris,2000,Cape,100.0,98.0,G1,_,_,_,_,_,_,_,5000,3",
-                "S001,,SatOne,JPN,MEO,Satellite,2010,Tanegashima,80.0,80.0,G2,_,_,_,_,_,_,_,2000,1"));
+                "record_id,satellite_name,country,approximate_orbit_type,object_type,launch_year,launch_site,longitude,avg_longitude,geohash,days_old,conjunction_count",
+                "R1,SatA,USA,LEO,Satellite,2001,Cape,100.5,98.5,geo1,5000,2",
+                "R2,DebrisX,RUS,MEO,Debris,1999,Baikonur,120.2,110.8,geo2,7000,5"));
 
         Files.write(TEMP_USERS, List.of(
                 "alice,Scientist,pass123",
@@ -47,32 +47,34 @@ public class MissionControlTest {
         List<SpaceObject> objects = mc.getSpaceObjects();
         assertEquals(2, objects.size());
 
-        SpaceObject debris = objects.get(0);
-        SpaceObject sat = objects.get(1);
+        SpaceObject obj1 = objects.get(0);
+        SpaceObject obj2 = objects.get(1);
 
-        assertEquals("DebrisOne", debris.satelliteName);
-        assertEquals("SatOne", sat.satelliteName);
-        assertEquals("Debris", debris.getObjectType());
-        assertEquals("Satellite", sat.getObjectType());
-        assertEquals(5000, debris.daysOld);
-        assertEquals(2000, sat.daysOld);
+        assertEquals("SatA", obj1.satelliteName);
+        assertEquals("DebrisX", obj2.satelliteName);
+        assertEquals("Satellite", obj1.getObjectType());
+        assertEquals("Debris", obj2.getObjectType());
+        assertEquals(5000, obj1.daysOld);
+        assertEquals(7000, obj2.daysOld);
     }
 
     @Test
-    void testAuthorizeUser_noCrash() {
-        // Enough inputs to log in and then back out of each role's menu
-        String scientistInput = String.join("\n", "alice", "pass123", "3");
-        String adminInput = String.join("\n", "bob", "adminpass", "4");
-        String agencyInput = String.join("\n", "carol", "agencypass", "3");
-        String policymakerInput = String.join("\n", "dave", "policy123", "3");
+    void testLoadData_missingColumnsHandled() throws IOException {
+        Files.write(TEMP_DATA, List.of(
+                "id,name",
+                "1,X"));
 
-        assertDoesNotThrow(
-                () -> new MissionControl(TEMP_DATA.toString(), new Scanner(scientistInput)).authorizeUser("Scientist"));
-        assertDoesNotThrow(
-                () -> new MissionControl(TEMP_DATA.toString(), new Scanner(adminInput)).authorizeUser("Admin"));
-        assertDoesNotThrow(
-                () -> new MissionControl(TEMP_DATA.toString(), new Scanner(agencyInput)).authorizeUser("Agency"));
-        assertDoesNotThrow(() -> new MissionControl(TEMP_DATA.toString(), new Scanner(policymakerInput))
-                .authorizeUser("Policymaker"));
+        MissionControl mc = new MissionControl(TEMP_DATA.toString(), new Scanner(""));
+        assertDoesNotThrow(mc::loadData);
+        assertEquals(0, mc.getSpaceObjects().size(), "Should not parse any objects with missing columns");
+    }
+
+    @Test
+    void testLoadData_emptyFileHandledGracefully() throws IOException {
+        Files.write(TEMP_DATA, List.of());
+
+        MissionControl mc = new MissionControl(TEMP_DATA.toString(), new Scanner(""));
+        assertDoesNotThrow(mc::loadData);
+        assertEquals(0, mc.getSpaceObjects().size());
     }
 }

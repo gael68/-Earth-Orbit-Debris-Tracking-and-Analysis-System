@@ -1,5 +1,2 @@
-[2025-05-06 01:21:28] Login successful for alice (Scientist)
-[2025-05-06 01:21:28] Login successful for bob (Admin)
-[2025-05-06 01:21:28] Policymaker reviewed the exited debris report.
-[2025-05-06 01:21:28] Policymaker assessed risk levels: High=1, Moderate=1, Low=1
-[2025-05-06 01:21:30] Default users.csv created with default roles.
+[2025-05-06 01:34:35] Policymaker reviewed the exited debris report.
+[2025-05-06 01:34:35] Policymaker assessed risk levels: High=1, Moderate=1, Low=1
