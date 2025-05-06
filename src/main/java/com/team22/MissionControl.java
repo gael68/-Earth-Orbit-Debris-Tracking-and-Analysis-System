@@ -45,11 +45,14 @@ public class MissionControl {
 
     public void loadData() {
         try (BufferedReader br = new BufferedReader(new FileReader(dataFilePath))) {
-            String headerLine = br.readLine();
-            if (headerLine == null) {
+            String header = br.readLine();
+            if (header == null) {
                 System.out.println("CSV file is empty.");
                 return;
             }
+
+            String headerLine = header.replaceAll("^(ï»¿|\\uFEFF)", "").trim();
+            System.out.println(headerLine);
 
             String[] headers = headerLine.split(",", -1);
             Map<String, Integer> colIndex = new HashMap<>();
@@ -59,7 +62,7 @@ public class MissionControl {
 
             // List of required columns
             String[] requiredColumns = {
-                    "record_id", "satellite_name", "country", "orbit_type", "object_type",
+                    "record_id", "satellite_name", "country", "approximate_orbit_type", "object_type",
                     "launch_year", "launch_site", "longitude", "avg_longitude", "geohash",
                     "days_old", "conjunction_count"
             };
@@ -86,7 +89,7 @@ public class MissionControl {
                 String recordId = parts[colIndex.get("record_id")].trim();
                 String satelliteName = parts[colIndex.get("satellite_name")].trim();
                 String country = parts[colIndex.get("country")].trim();
-                String approximateOrbitType = parts[colIndex.get("orbit_type")].trim();
+                String approximateOrbitType = parts[colIndex.get("approximate_orbit_type")].trim();
                 String objectType = parts[colIndex.get("object_type")].trim();
                 int launchYear = parseIntSafe(parts[colIndex.get("launch_year")]);
                 String launchSite = parts[colIndex.get("launch_site")].trim();

@@ -1,3 +1,0 @@
-RecordID,Ignore,SatelliteName,Country,OrbitType,ObjectType,LaunchYear,LaunchSite,Longitude,AvgLongitude,Geohash,Skip1,Skip2,Skip3,Skip4,Skip5,Skip6,Skip7,DaysOld,ConjunctionCount
-D001,,DebrisOne,USA,LEO,Debris,2000,Cape,100.0,98.0,G1,_,_,_,_,_,_,_,5000,3
-S001,,SatOne,JPN,MEO,Satellite,2010,Tanegashima,80.0,80.0,G2,_,_,_,_,_,_,_,2000,1

@@ -1,11 +1,5 @@
-[2025-05-05 20:20:41] Login successful for alice (Scientist)
-[2025-05-05 20:20:41] Login successful for bob (Admin)
-[2025-05-05 20:20:41] Policymaker reviewed the exited debris report.
-[2025-05-05 20:20:41] Policymaker assessed risk levels: High=1, Moderate=1, Low=1
-[2025-05-05 20:20:45] Default users.csv created with default roles.
-[2025-05-05 20:21:15] Login successful for bob (Admin)
-[2025-05-05 20:21:41] Admin updated user: dave
-[2025-05-06 01:11:18] Login successful for alice (Scientist)
-[2025-05-06 01:11:18] Login successful for bob (Admin)
-[2025-05-06 01:11:31] Scientist viewed objects in category: UNKNOWN
-[2025-05-06 01:11:31] Scientist viewed objects in category: ROCKET BODY
+[2025-05-06 01:21:28] Login successful for alice (Scientist)
+[2025-05-06 01:21:28] Login successful for bob (Admin)
+[2025-05-06 01:21:28] Policymaker reviewed the exited debris report.
+[2025-05-06 01:21:28] Policymaker assessed risk levels: High=1, Moderate=1, Low=1
+[2025-05-06 01:21:30] Default users.csv created with default roles.

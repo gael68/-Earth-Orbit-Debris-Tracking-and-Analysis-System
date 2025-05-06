@@ -1,4 +1,4 @@
-﻿record_id,norad_cat_id,satellite_name,country,approximate_orbit_type,object_type,launch_year,launch_site,longitude,avg_longitude,geohash,HRR_Category,is_nominated,nominated_at,has_dossier,last_updated_at,justification,focused_analysis,days_old,conjunction_count,is_unk_object,all_maneuvers,days_since_ob,recent_maneuvers,deltaV_90day,has_sister_debris
+record_id,norad_cat_id,satellite_name,country,approximate_orbit_type,object_type,launch_year,launch_site,longitude,avg_longitude,geohash,HRR_Category,is_nominated,nominated_at,has_dossier,last_updated_at,justification,focused_analysis,days_old,conjunction_count,is_unk_object,all_maneuvers,days_since_ob,recent_maneuvers,deltaV_90day,has_sister_debris
 10096,10096,SL-14 R/B,CIS,LEO,ROCKET BODY,1977,PKMTR,-70.94856912,-45.06140362,"62.925556,40.577778",,FALSE,,FALSE,,,,17390,0,FALSE,,,,,
 10436,10436,COSMOS 839 DEB,CIS,LEO,DEBRIS,1976,PKMTR,29.39840935,-32.93402367,"62.925556,40.577778",,FALSE,,FALSE,,,,17741,0,FALSE,,,,,
 11888,11888,SL-6 R/B(2),CIS,HEO,ROCKET BODY,1980,PKMTR,126.9150131,-19.61821317,"62.925556,40.577778",,FALSE,,FALSE,,,,16286,0,FALSE,,,,,
