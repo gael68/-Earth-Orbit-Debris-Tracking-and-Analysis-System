@@ -4,23 +4,36 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Handles creation, listing, and deletion of user accounts.
- * Users are persisted in a configurable CSV file (default: data/users.csv).
+ * Handles creation, verification, listing, updating, and deletion of user accounts.
+ * Users are stored in a configurable CSV file (default: data/users.csv).
  */
 public class UserManager {
 
     private final String userFile;
 
-    // Default constructor uses the standard file
+    /**
+     * Constructs a UserManager with the default file path.
+     */
     public UserManager() {
         this("data/users.csv");
     }
 
-    // Constructor for injecting custom test path
+    /**
+     * Constructs a UserManager with a specified file path (useful for testing).
+     *
+     * @param userFile the path to the user CSV file
+     */
     public UserManager(String userFile) {
         this.userFile = userFile;
     }
 
+    /**
+     * Verifies login credentials based on username, password, and user role.
+     *
+     * @param role    the role to verify (e.g., Scientist, Admin)
+     * @param scanner a Scanner for reading user input
+     * @return true if credentials are valid; false otherwise
+     */
     public boolean verifyLogin(String role, Scanner scanner) {
         File file = new File("data/users.csv");
         if (!file.exists()) {
@@ -58,7 +71,8 @@ public class UserManager {
     }
 
     /**
-     * Prompts to create a new user and saves it.
+     * Creates a new user by prompting for username and role,
+     * then writing to the user file.
      */
     public void createUser() {
         Scanner scanner = new Scanner(System.in);
@@ -78,7 +92,7 @@ public class UserManager {
     }
 
     /**
-     * Displays all users from the file.
+     * Lists all users from the CSV file.
      */
     public void listUsers() {
         File file = new File(userFile);
@@ -100,7 +114,7 @@ public class UserManager {
     }
 
     /**
-     * Deletes a user from the user file by name.
+     * Deletes a user by prompting for a username and removing the corresponding entry.
      */
     public void deleteUser() {
         Scanner scanner = new Scanner(System.in);
@@ -113,7 +127,7 @@ public class UserManager {
         boolean found = false;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
 
             String line;
             while ((line = reader.readLine()) != null) {
@@ -139,6 +153,10 @@ public class UserManager {
         }
     }
 
+    /**
+     * Updates an existing user's username and/or password.
+     * Prompts for the target user and new values.
+     */
     public void manageUser() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter username to update: ");
@@ -150,7 +168,7 @@ public class UserManager {
         boolean found = false;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
 
             String line;
             while ((line = reader.readLine()) != null) {
@@ -189,5 +207,4 @@ public class UserManager {
             System.out.println("Error updating user: " + e.getMessage());
         }
     }
-
 }

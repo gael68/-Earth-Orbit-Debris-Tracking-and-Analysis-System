@@ -1,85 +1,72 @@
 package com.team22;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.*;
 
-class ImpactAnalysisTest {
+import static org.junit.jupiter.api.Assertions.*;
 
-    private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+public class ImpactAnalysisTest {
+
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private PrintStream originalOut;
+    private InputStream originalIn;
 
-    // Concrete subclass for testing purposes
-    static class TestSpaceObject extends SpaceObject {
-        public TestSpaceObject(String recordId, String satelliteName, String country, String approximateOrbitType,
-                String objectType, int launchYear, String launchSite,
-                double longitude, double avgLongitude, String geohash,
-                int daysOld, int conjunctionCount) {
-            super(recordId, satelliteName, country, approximateOrbitType, objectType, launchYear,
-                    launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
-        }
-
-        @Override
-        public String getObjectType() {
-            return this.objectType != null ? this.objectType : "UNKNOWN";
-        }
-    }
+    private List<SpaceObject> mockObjects;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         originalOut = System.out;
-        System.setOut(new PrintStream(outputStreamCaptor));
+        originalIn = System.in;
+
+        System.setOut(new PrintStream(outContent));
+
+        mockObjects = List.of(
+            new Debris("R1", "Debris-1", "USA", "LEO", "DEBRIS", 2000, "Cape", 100.0, 90.0, "geo1", 300, 2),
+            new Satellite("R2", "Sat-2", "RUS", "LEO", "SATELLITE", 2005, "Baikonur", 80.0, 79.0, "geo2", 50, 1),
+            new Debris("R3", "Debris-2", "USA", "MEO", "DEBRIS", 1990, "VAFB", 60.0, 58.0, "geo3", 700, 0)
+        );
     }
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         System.setOut(originalOut);
+        System.setIn(originalIn);
     }
 
     @Test
-    void testAnalyzeLongTermImpactPrintsTop10Oldest() {
-        List<SpaceObject> spaceObjects = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-            spaceObjects.add(new TestSpaceObject(
-                    "ID" + i, "Satellite" + i, "Country" + i, "LEO",
-                    "Satellite", 2000 + i, "Site" + i, i, i + 0.5,
-                    "geohash" + i, i * 100, i));
-        }
-        ImpactAnalysis analysis = new ImpactAnalysis(spaceObjects);
-
+    void testAnalyzeLongTermImpact_filtersCorrectly() {
+        ImpactAnalysis analysis = new ImpactAnalysis(mockObjects);
         analysis.analyzeLongTermImpact();
-        String output = outputStreamCaptor.toString();
 
-        // Verify that the 10 oldest objects are printed
-        assertTrue(output.contains("Satellite14"), "Expected to find Satellite14 (oldest) in output.");
-        assertTrue(output.contains("Satellite5"), "Expected to find Satellite5 (tenth oldest) in output.");
-        assertFalse(output.contains("Satellite4"), "Did not expect to find Satellite4 (11th oldest) in output.");
+        String output = outContent.toString();
+        assertTrue(output.contains("Record ID: R1"), "Debris-1 should be in the impact report.");
+        assertTrue(output.toLowerCase().contains("leo"), "Output should mention LEO.");
     }
 
     @Test
-    void testGenerateDensityReportCountsCorrectly() {
-        List<SpaceObject> spaceObjects = Arrays.asList(
-                new TestSpaceObject("ID1", "Sat1", "USA", "LEO",
-                        "Satellite", 2010, "SiteA", 0, 0.5, "geohash1", 500, 2),
-                new TestSpaceObject("ID2", "Sat2", "USA", "MEO",
-                        "Satellite", 2011, "SiteB", 1, 1.5, "geohash2", 400, 3),
-                new TestSpaceObject("ID3", "Sat3", "USA", "LEO",
-                        "Satellite", 2012, "SiteC", 2, 2.5, "geohash3", 300, 1),
-                new TestSpaceObject("ID4", "Sat4", "USA", null,
-                        "Debris", 2013, "SiteD", 3, 3.5, "geohash4", 200, 4),
-                new TestSpaceObject("ID5", "Sat5", "USA", "HEO",
-                        "Debris", 2014, "SiteE", 4, 4.5, "geohash5", 100, 5));
-        ImpactAnalysis analysis = new ImpactAnalysis(spaceObjects);
+    void testGenerateDensityReport_withValidInput() {
+        String simulatedInput = "50\n110\n";
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
 
+        ImpactAnalysis analysis = new ImpactAnalysis(mockObjects);
         analysis.generateDensityReport();
-        String output = outputStreamCaptor.toString();
 
-        // Verify that the counts match
-        assertTrue(output.contains("LEO: 2"), "Expected 2 LEO objects in report.");
-        assertTrue(output.contains("MEO: 1"), "Expected 1 MEO object in report.");
-        assertTrue(output.contains("HEO: 1"), "Expected 1 HEO object in report.");
-        assertTrue(output.contains("UNKNOWN: 1"), "Expected 1 UNKNOWN object in report.");
+        String output = outContent.toString();
+        assertTrue(output.contains("Debris Density Report"), "Should include report header.");
+        assertTrue(output.contains("Record ID: R2"), "Should include object R2 within range.");
+        assertTrue(output.contains("Record ID: R3"), "Should include object R3 within range.");
+    }
+
+    @Test
+    void testGenerateDensityReport_withInvalidInput() {
+        String simulatedInput = "abc\nxyz\n";
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+
+        ImpactAnalysis analysis = new ImpactAnalysis(mockObjects);
+        analysis.generateDensityReport();
+
+        String output = outContent.toString();
+        assertTrue(output.contains("Invalid input"), "Should detect and report invalid number format.");
     }
 }

@@ -1,32 +1,38 @@
 package com.team22;
 
-/**
- * Handles the tracking of space objects by object type category
- * (e.g., Debris, Rocket Body, Payload, Unknown).
- */
-
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Handles the tracking of space objects by object type category
+ * (e.g., Debris, Rocket Body, Payload, Unknown).
+ * Used by Scientists to filter and view specific classes of objects in orbit.
+ */
 public class TrackingSystem {
 
     private List<SpaceObject> spaceObjects;
 
     /**
-     * Constructs a tracking system with the provided list of space objects.
-     * 
+     * Constructs a TrackingSystem instance using a list of space objects.
+     *
      * @param spaceObjects list of loaded space debris and satellite objects
      */
-
     public TrackingSystem(List<SpaceObject> spaceObjects) {
         this.spaceObjects = spaceObjects;
     }
 
     /**
-     * Displays the tracking menu for Scientists to choose a category of objects to
-     * list.
+     * Displays a menu interface for scientists to select and track
+     * objects by category.
+     * 
+     * Categories include:
+     * - Rocket Body
+     * - Debris
+     * - Payload
+     * - Unknown
+     * 
+     * Loops until the user selects "Back".
      */
-
     public void displayTrackingMenu() {
         Scanner scanner = new Scanner(System.in);
         String choice;
@@ -43,32 +49,23 @@ public class TrackingSystem {
             choice = scanner.nextLine().trim();
 
             switch (choice) {
-                case "1":
-                    trackByType("ROCKET BODY");
-                    break;
-                case "2":
-                    trackByType("DEBRIS");
-                    break;
-                case "3":
-                    trackByType("PAYLOAD");
-                    break;
-                case "4":
-                    trackByType("UNKNOWN");
-                    break;
-                case "5":
+                case "1" -> trackByType("ROCKET BODY");
+                case "2" -> trackByType("DEBRIS");
+                case "3" -> trackByType("PAYLOAD");
+                case "4" -> trackByType("UNKNOWN");
+                case "5" -> {
                     return;
-                default:
-                    System.out.println("Invalid input.");
+                }
+                default -> System.out.println("Invalid input.");
             }
         }
     }
 
     /**
-     * Filters and prints objects that match the specified object type.
-     * 
+     * Filters and displays all space objects that match a given type.
+     *
      * @param type the object type to track (e.g., "DEBRIS")
      */
-
     private void trackByType(String type) {
         boolean found = false;
         System.out.println("\n--- Tracking: " + type + " ---");

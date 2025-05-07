@@ -4,7 +4,6 @@ package com.team22;
  * Entry point for the Space Debris Tracking System.
  * Initializes the system, loads data, and starts the user interaction loop.
  */
-
 public class RunSimulation {
 
     /**

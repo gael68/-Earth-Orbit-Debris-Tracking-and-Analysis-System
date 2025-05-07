@@ -4,8 +4,6 @@ import org.junit.jupiter.api.*;
 
 import java.io.*;
 import java.nio.file.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,7 +11,6 @@ public class LoggerTest {
 
     private static final String TEST_LOG_DIR = "logs";
     private static final String TEST_LOG_FILE = TEST_LOG_DIR + "/system_log.txt";
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @BeforeEach
     void setUp() throws IOException {

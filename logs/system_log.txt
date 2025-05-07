@@ -1,2 +1,15 @@
-[2025-05-06 01:34:35] Policymaker reviewed the exited debris report.
-[2025-05-06 01:34:35] Policymaker assessed risk levels: High=1, Moderate=1, Low=1
+[2025-05-06 23:29:50] Policymaker reviewed the exited debris report.
+[2025-05-06 23:29:50] Policymaker assessed risk levels: High=1, Moderate=1, Low=1
+[2025-05-06 23:39:44] Default users.csv created with default roles.
+[2025-05-06 23:39:55] Login successful for alice (Scientist)
+[2025-05-06 23:39:56] Scientist assessed orbit status. In-orbit: 22, Exited: 76
+[2025-05-06 23:39:59] Scientist viewed objects in category: DEBRIS
+[2025-05-06 23:40:09] Login successful for carol (Agency)
+[2025-05-06 23:40:10] Agency analyzed long-term impact for LEO objects.
+[2025-05-06 23:40:14] Agency generated filtered density report.
+[2025-05-06 23:40:16] Agency analyzed long-term impact for LEO objects.
+[2025-05-06 23:40:19] Agency generated filtered density report.
+[2025-05-06 23:40:31] Login successful for bob (Admin)
+[2025-05-06 23:40:32] Admin viewed user list.
+[2025-05-06 23:40:40] Admin created user: jacob with role: Admin
+[2025-05-06 23:40:46] Admin viewed user list.

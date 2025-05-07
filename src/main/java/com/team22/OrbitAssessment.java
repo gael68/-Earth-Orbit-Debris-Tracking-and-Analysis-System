@@ -85,7 +85,7 @@ public class OrbitAssessment {
     private void saveCSV(String filename) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             writer.write(
-                    "RecordID,SatelliteName,Country,OrbitType,ObjectType,LaunchYear,LaunchSite,Longitude,AvgLongitude,Geohash,DaysOld,ConjunctionCount,StillInOrbit,RiskLevel\n");
+                    "record_id,satellite_name,country,approximate_orbit_type,object_type,launch_year,launch_site,longitude,avg_longitude,geohash,days_old,conjunction_count,still_in_orbit,risk_level\n");
 
             for (SpaceObject obj : spaceObjects) {
                 boolean still = isStillInOrbit(obj);

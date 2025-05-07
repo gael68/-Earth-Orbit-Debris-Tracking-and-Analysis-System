@@ -51,66 +51,83 @@ public class MissionControl {
                 return;
             }
 
+            // Remove BOM if present and normalize
             String headerLine = header.replaceAll("^(ï»¿|\\uFEFF)", "").trim();
-            System.out.println(headerLine);
-
             String[] headers = headerLine.split(",", -1);
+
             Map<String, Integer> colIndex = new HashMap<>();
             for (int i = 0; i < headers.length; i++) {
-                colIndex.put(headers[i].trim().toLowerCase(), i);
+                String normalized = headers[i]
+                        .trim()
+                        .replaceAll("([a-z])([A-Z])", "$1_$2") // convert camelCase to snake_case
+                        .toLowerCase();
+                colIndex.put(normalized, i);
+
             }
 
-            // List of required columns
+            if (colIndex.containsKey("days_old")) {
+                colIndex.put("days_old", colIndex.get("days_old") + 1);
+            }
+            
+            if (colIndex.containsKey("conjunction_count")) {
+                colIndex.put("conjunction_count", colIndex.get("conjunction_count") + 1);
+            }
+            
+
             String[] requiredColumns = {
                     "record_id", "satellite_name", "country", "approximate_orbit_type", "object_type",
                     "launch_year", "launch_site", "longitude", "avg_longitude", "geohash",
                     "days_old", "conjunction_count"
             };
 
-            // Check for missing columns
-            List<String> missingColumns = new ArrayList<>();
-            for (String column : requiredColumns) {
-                if (!colIndex.containsKey(column)) {
-                    missingColumns.add(column);
+            List<String> missing = new ArrayList<>();
+            for (String col : requiredColumns) {
+                if (!colIndex.containsKey(col)) {
+                    missing.add(col);
                 }
             }
 
-            if (!missingColumns.isEmpty()) {
-                System.out.println("Missing required columns in CSV header: " + String.join(", ", missingColumns));
+            if (!missing.isEmpty()) {
+                System.out.println("Missing required columns in CSV header: " + String.join(", ", missing));
                 return;
             }
 
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",", -1);
-                if (parts.length < headers.length)
+                if (parts.length < headers.length) {
+                    System.out.println("Skipping row — too few fields: " + line);
                     continue;
+                }
 
-                String recordId = parts[colIndex.get("record_id")].trim();
-                String satelliteName = parts[colIndex.get("satellite_name")].trim();
-                String country = parts[colIndex.get("country")].trim();
-                String approximateOrbitType = parts[colIndex.get("approximate_orbit_type")].trim();
-                String objectType = parts[colIndex.get("object_type")].trim();
-                int launchYear = parseIntSafe(parts[colIndex.get("launch_year")]);
-                String launchSite = parts[colIndex.get("launch_site")].trim();
-                double longitude = parseDoubleSafe(parts[colIndex.get("longitude")]);
-                double avgLongitude = parseDoubleSafe(parts[colIndex.get("avg_longitude")]);
-                String geohash = parts[colIndex.get("geohash")].trim();
-                int daysOld = parseIntSafe(parts[colIndex.get("days_old")]);
-                int conjunctionCount = parseIntSafe(parts[colIndex.get("conjunction_count")]);
+                try {
+                    String recordId = getValue(parts, colIndex.get("record_id"));
+                    String satelliteName = getValue(parts, colIndex.get("satellite_name"));
+                    String country = getValue(parts, colIndex.get("country"));
+                    String orbitType = getValue(parts, colIndex.get("approximate_orbit_type"));
+                    String objectType = getValue(parts, colIndex.get("object_type"));
+                    int launchYear = parseIntSafe(getValue(parts, colIndex.get("launch_year")));
+                    String launchSite = getValue(parts, colIndex.get("launch_site"));
+                    double longitude = parseDoubleSafe(getValue(parts, colIndex.get("longitude")));
+                    double avgLongitude = parseDoubleSafe(getValue(parts, colIndex.get("avg_longitude")));
+                    String geohash = getValue(parts, colIndex.get("geohash"));
+                    int daysOld = parseIntSafe(getValue(parts, colIndex.get("days_old")));
+                    int conjunctionCount = parseIntSafe(getValue(parts, colIndex.get("conjunction_count")));
+                    SpaceObject obj = objectType.equalsIgnoreCase("debris")
+                            ? new Debris(recordId, satelliteName, country, orbitType, objectType,
+                                    launchYear, launchSite, longitude, avgLongitude, geohash,
+                                    daysOld, conjunctionCount)
+                            : new Satellite(recordId, satelliteName, country, orbitType, objectType,
+                                    launchYear, launchSite, longitude, avgLongitude, geohash,
+                                    daysOld, conjunctionCount);
 
-                SpaceObject obj = objectType.equalsIgnoreCase("debris")
-                        ? new Debris(recordId, satelliteName, country, approximateOrbitType, objectType,
-                                launchYear, launchSite, longitude, avgLongitude, geohash,
-                                daysOld, conjunctionCount)
-                        : new Satellite(recordId, satelliteName, country, approximateOrbitType, objectType,
-                                launchYear, launchSite, longitude, avgLongitude, geohash,
-                                daysOld, conjunctionCount);
-
-                spaceObjects.add(obj);
+                    spaceObjects.add(obj);
+                } catch (Exception e) {
+                    System.out.println("Skipping malformed row: " + line);
+                }
             }
 
-            System.out.println("Data loaded from " + dataFilePath);
+            System.out.println("Data loaded from " + dataFilePath + ". Total objects: " + spaceObjects.size());
         } catch (IOException e) {
             System.out.println("Failed to read data: " + e.getMessage());
         }
@@ -130,6 +147,7 @@ public class MissionControl {
                 case "4" -> authorizeUser("Admin");
                 case "5", "EXIT" -> {
                     System.out.println("Saving and exiting...");
+                    new OrbitAssessment(spaceObjects).assessAndSave();
                     return;
                 }
                 default -> System.out.println("Invalid selection.");
@@ -254,6 +272,12 @@ public class MissionControl {
         } catch (Exception e) {
             return 0.0;
         }
+    }
+
+    private String getValue(String[] parts, Integer index) {
+        if (index == null || index >= parts.length)
+            return "";
+        return parts[index].trim();
     }
 
     public List<SpaceObject> getSpaceObjects() {
