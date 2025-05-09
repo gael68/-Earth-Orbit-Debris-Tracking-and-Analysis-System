@@ -82,8 +82,16 @@ public class UserManager {
         System.out.print("Enter role (Scientist, Admin, Agency, Policymaker): ");
         String role = scanner.nextLine().trim();
 
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine().trim();
+        
+        if (username.isEmpty() || role.isEmpty() || password.isEmpty()) {
+            System.out.println("All fields are required.");
+            return;
+        }
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(userFile, true))) {
-            writer.write(username + "," + role + "\n");
+            writer.write(username + "," + role + "," + password + "\n");
             System.out.println("User created successfully.");
             Logger.log("Admin created user: " + username + " with role: " + role);
         } catch (IOException e) {

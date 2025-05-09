@@ -56,28 +56,32 @@ public class MissionControl {
             String[] headers = headerLine.split(",", -1);
 
             Map<String, Integer> colIndex = new HashMap<>();
+            int geohashIndex = -1;
+            
             for (int i = 0; i < headers.length; i++) {
                 String normalized = headers[i]
                         .trim()
                         .replaceAll("([a-z])([A-Z])", "$1_$2") // convert camelCase to snake_case
                         .toLowerCase();
                 colIndex.put(normalized, i);
-
-            }
-
-            if (colIndex.containsKey("days_old")) {
-                colIndex.put("days_old", colIndex.get("days_old") + 1);
+                if (normalized.equals("geohash")) {
+                    geohashIndex = i;
+                }
             }
             
-            if (colIndex.containsKey("conjunction_count")) {
-                colIndex.put("conjunction_count", colIndex.get("conjunction_count") + 1);
+            // Adjust indices for fields after 'geohash'
+            if (geohashIndex != -1) {
+                for (Map.Entry<String, Integer> entry : new HashMap<>(colIndex).entrySet()) {
+                    if (entry.getValue() > geohashIndex) {
+                        colIndex.put(entry.getKey(), entry.getValue() + 1);
+                    }
+                }
             }
             
-
             String[] requiredColumns = {
-                    "record_id", "satellite_name", "country", "approximate_orbit_type", "object_type",
-                    "launch_year", "launch_site", "longitude", "avg_longitude", "geohash",
-                    "days_old", "conjunction_count"
+                "record_id", "satellite_name", "country", "approximate_orbit_type", "object_type",
+                "launch_year", "launch_site", "longitude", "avg_longitude", "geohash",
+                "days_old", "conjunction_count"
             };
 
             List<String> missing = new ArrayList<>();
