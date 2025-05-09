@@ -1,6 +1,8 @@
 package com.team22;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 /**
@@ -124,42 +126,42 @@ public class UserManager {
     /**
      * Deletes a user by prompting for a username and removing the corresponding entry.
      */
-    public void deleteUser() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter username to delete: ");
-        String target = scanner.nextLine().trim();
+/**
+ * Deletes a user by prompting for a username and removing the corresponding entry.
+ */
+public void deleteUser() {
+    Scanner scanner = new Scanner(System.in);
+    System.out.print("Enter username to delete: ");
+    String target = scanner.nextLine().trim();
 
-        File inputFile = new File(userFile);
-        File tempFile = new File(userFile.replace(".csv", "_temp.csv"));
+    File inputFile = new File(userFile);
+    boolean found = false;
 
-        boolean found = false;
+    try {
+        List<String> lines = Files.readAllLines(inputFile.toPath());
+        List<String> updatedLines = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (!line.startsWith(target + ",")) {
-                    writer.write(line + "\n");
-                } else {
-                    found = true;
-                }
-            }
-
-            if (found) {
-                System.out.println("User deleted: " + target);
-                Logger.log("Admin deleted user: " + target);
-                inputFile.delete();
-                tempFile.renameTo(inputFile);
+        for (String line : lines) {
+            if (!line.startsWith(target + ",")) {
+                updatedLines.add(line);
             } else {
-                System.out.println("User not found.");
-                tempFile.delete();
+                found = true;
             }
-
-        } catch (IOException e) {
-            System.out.println("Error deleting user: " + e.getMessage());
         }
+
+        if (found) {
+            Files.write(inputFile.toPath(), updatedLines, StandardOpenOption.TRUNCATE_EXISTING);
+            System.out.println("User deleted: " + target);
+            Logger.log("Admin deleted user: " + target);
+        } else {
+            System.out.println("User not found.");
+        }
+
+    } catch (IOException e) {
+        System.out.println("Error deleting user: " + e.getMessage());
     }
+}
+
 
     /**
      * Updates an existing user's username and/or password.
